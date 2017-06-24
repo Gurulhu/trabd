@@ -1,36 +1,79 @@
-import tkinter as tk
-from tkinter import ttk
+import sys
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 
-window = tk.Tk()
-window.title("Trabd")
+class greetingView( QWidget ):
+    def __init__( self, parent = None, usr = None ):
+        QMdiSubWindow.__init__( self, parent )
+        self.welcome = QLabel( "Olá " + parent.usr + "!", self )
+        self.welcome.move( parent.width()/2, parent.height()/2 )
 
-window.resizable(0,0)
+class mainWindow( QMainWindow ):
+    def __init__( self, parent = None, usr = None, pwd = None ):
+        QMainWindow.__init__(self, parent)
+        self.setWindowTitle( "Trabd" )
+        self.resize( 800, 600 )
+        self.usr = usr
+        self.pwd = pwd
 
-creditos = ttk.Label( window, text="Vida Longa ao Guru!")
-creditos.grid( column = 0, row = 0 )
+        menuBar = QMenuBar( self )
+        menuBar.setNativeMenuBar( True )
+        mainMenu = menuBar.addMenu("Menu")
+        db_btn = QAction("Base de Dados", self)
+        #db_btn.triggered.connect(self.dbView)
+        report_btn = QAction("Relatórios", self)
+        #report_btn.triggered.connect(self.reportsView)
+        exit_btn = QAction("Sair", self)
+        exit_btn.triggered.connect( self.close )
+        mainMenu.addAction(db_btn)
+        mainMenu.addAction(report_btn)
+        mainMenu.addAction(exit_btn)
 
-#User field
-user = tk.StringVar()
-user_label = ttk.Label( window, text="Login:")
-user_label.grid( column = 0, row = 3 )
-user_field = ttk.Entry( window, width = 60, textvariable = user )
-user_field.grid( column = 0, row = 4 )
+        self.setMenuBar( menuBar )
 
-#Pwd field
-pwd = tk.StringVar()
-pwd_label = ttk.Label( window, text="Senha:")
-pwd_label.grid( column = 0, row = 6 )
-pwd_field = ttk.Entry( window, width = 60, textvariable = pwd )
-pwd_field.grid( column = 0, row = 7 )
+        self.setCentralWidget( greetingView( self ) )
 
-#Login button
-def login_button_callback():
-    pass
+    def getUser():
+        return self.usr
 
-login_button = ttk.Button( window, text = "Login", command = login_button_callback )
-login_button.grid( column = 0, row = 9 )
+class loginScreen( QDialog ):
+    def __init__( self, parent = None ):
+        QDialog.__init__(self, parent)
+        self.setWindowTitle( "Login" )
+        self.resize( 280, 180 )
 
-#pimp
-user_field.focus()
+        self.usr_label = QLabel( "Usuário:", self )
+        self.usr_label.move( 20, 20 )
+        self.usr = QLineEdit( self )
+        self.usr.move( 20, 40 )
+        self.usr.resize( 240, 20 )
 
-window.mainloop()
+        self.pwd_label = QLabel( "Senha:", self )
+        self.pwd_label.move( 20, 80 )
+        self.pwd = QLineEdit( self )
+        self.pwd.setEchoMode( QLineEdit.Password )
+        self.pwd.move( 20, 100)
+        self.pwd.resize( 240, 20 )
+
+        self.login_btn = QPushButton("Login", self)
+        self.login_btn.clicked.connect( self.login )
+        self.login_btn.move(100, 140)
+        self.login_btn.resize( 80, 20 )
+
+        self.show()
+
+    @pyqtSlot()
+    def login( self ):
+        self.accept()
+
+
+
+if __name__ == "__main__":
+    app = QApplication( sys.argv )
+    login = loginScreen()
+    if login.exec_() == QDialog.Accepted:
+        main = mainWindow( usr = login.usr.text(), pwd = login.pwd.text() )
+        login.close()
+        main.show()
+
+    sys.exit( app.exec_() )
