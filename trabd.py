@@ -3,10 +3,23 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 class greetingView( QWidget ):
-    def __init__( self, parent = None, usr = None ):
-        QMdiSubWindow.__init__( self, parent )
+    def __init__( self, parent = None ):
+        QWidget.__init__( self, parent )
         self.welcome = QLabel( "Olá " + parent.usr + "!", self )
         self.welcome.move( parent.width()/2, parent.height()/2 )
+
+class dbView( QWidget ):
+    def __init__( self, parent = None ):
+        QWidget.__init__( self, parent )
+        self.welcome = QLabel( "Esta é a Base de Dados", self )
+        self.welcome.move( parent.width()/2, parent.height()/2 )
+
+class reportView( QWidget ):
+    def __init__( self, parent = None ):
+        QWidget.__init__( self, parent )
+        self.welcome = QLabel( "Aqui ficaram os relatórios", self )
+        self.welcome.move( parent.width()/2, parent.height()/2 )
+
 
 class mainWindow( QMainWindow ):
     def __init__( self, parent = None, usr = None, pwd = None ):
@@ -20,9 +33,9 @@ class mainWindow( QMainWindow ):
         menuBar.setNativeMenuBar( True )
         mainMenu = menuBar.addMenu("Menu")
         db_btn = QAction("Base de Dados", self)
-        #db_btn.triggered.connect(self.dbView)
+        db_btn.triggered.connect(self.callDbView)
         report_btn = QAction("Relatórios", self)
-        #report_btn.triggered.connect(self.reportsView)
+        report_btn.triggered.connect(self.callReportView)
         exit_btn = QAction("Sair", self)
         exit_btn.triggered.connect( self.close )
         mainMenu.addAction(db_btn)
@@ -35,6 +48,12 @@ class mainWindow( QMainWindow ):
 
     def getUser():
         return self.usr
+
+    def callDbView( self, flag ):
+        self.setCentralWidget( dbView( self ) )
+
+    def callReportView( self, flag ):
+        self.setCentralWidget( reportView( self ) )
 
 class loginScreen( QDialog ):
     def __init__( self, parent = None ):
