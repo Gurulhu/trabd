@@ -83,8 +83,8 @@ class loginScreen( QDialog ):
 
     @pyqtSlot()
     def login( self ):
+        
         self.accept()
-
 
 
 if __name__ == "__main__":
