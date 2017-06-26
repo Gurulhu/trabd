@@ -1,0 +1,14 @@
+CREATE TABLE NACAO (
+  nome              VARCHAR(200)  NOT NULL,
+  continente        VARCHAR(5)    NOT NULL,
+  esporte_principal VARCHAR(50),
+  bandeira          VARCHAR(80)   NOT NULL,
+  hino              TEXT          NOT NULL,
+  nro_atletar       INT           NOT NULL,
+  PRIMARY KEY ( nome )
+);
+
+CREATE TABLE PARTICIPANTE(
+
+
+)
