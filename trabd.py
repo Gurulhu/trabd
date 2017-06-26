@@ -1,4 +1,5 @@
 import sys
+import cx_Oracle
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -83,16 +84,26 @@ class loginScreen( QDialog ):
 
     @pyqtSlot()
     def login( self ):
-        
-        self.accept()
+        ip = sys.argv[1]
+        port = sys.argv[2]
+        sid = sys.argv[3]
+        conn = cx_Oracle.makedsn(ip, port, sid)
+
+        try:
+            db = cx_Oracle.connect( str( self.usr.text() ), str( self.pwd.text() ), conn )
+            self.accept()
+        except Exception as e:
+            print( e )
+            self.reject()
 
 
 if __name__ == "__main__":
     app = QApplication( sys.argv )
     login = loginScreen()
-    if login.exec_() == QDialog.Accepted:
+    login_status = login.exec_()
+    login.close()
+    if login_status == QDialog.Accepted:
         main = mainWindow( usr = login.usr.text(), pwd = login.pwd.text() )
-        login.close()
         main.show()
 
-    sys.exit( app.exec_() )
+    app.exit(0)
