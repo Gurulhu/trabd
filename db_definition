@@ -4,11 +4,69 @@ CREATE TABLE NACAO (
   esporte_principal VARCHAR(50),
   bandeira          VARCHAR(80)   NOT NULL,
   hino              TEXT          NOT NULL,
-  nro_atletar       INT           NOT NULL,
+  nro_atletas       INT           NOT NULL,
   PRIMARY KEY ( nome )
 );
 
 CREATE TABLE PARTICIPANTE(
+  nro_passaporte    INTEGER(12)   NOT NULL,
+  nacao             VARCHAR(200)  NOT NULL,
+  data_nasc         DATE          NOT NULL,
+  nome              VARCHAR(200)  NOT NULL,
+  sexo              BOOLEAN       NOT NULL,
 
+  FOREIGN KEY ( nacao ) REFERENCES  NACAO( nome ) ON DELETE CASCADE,
+  PRIMARY KEY ( nro_passaporte )
+);
 
-)
+CREATE TABLE PREPARADOR(
+  nro_passaporte  INTEGER(12)     NOT NULL,
+  estado          VARCHAR(2)      NOT NULL,
+  cpf             INTEGER(15),
+  email           VARCHAR(150)    NOT NULL,
+  senha           VARCHAR(100)    NOT NULL,
+  cidade          VARCHAR(150),
+
+  FOREIGN KEY ( nro_passaporte ) REFERENCES PARTICIPANTE( nro_passaporte ) ON DELETE CASCADE,
+  PRIMARY KEY ( nro_passaporte )
+);
+
+CREATE TABLE TELEFONE_PREPARADOR(
+  preparador      INTEGER(12)     NOT NULL,
+  telefone        INTEGER(15)     NOT NULL,
+
+  FOREIGN KEY ( preparador ) REFERENCES PREPARADOR( nro_passaporte ) ON DELETE CASCADE,
+  PRIMARY KEY ( preparador, telefone )
+);
+
+CREATE TABLE ROTINA(
+  preparador      INTEGER(12)     NOT NULL,
+  periodo         DATE            NOT NULL,
+  descricao       TEXT            NOT NULL,
+
+  FOREIGN KEY ( preparador ) REFERENCES PREPARADOR( nro_passaporte ) ON DELETE CASCADE,
+  PRIMARY KEY ( preparador, periodo )
+);
+
+CREATE TABLE TREINO(
+  id              INTEGER         NOT NULL AUTO_INCREMENT,
+  objetivo        TEXT            NOT NULL,
+
+  PRIMARY KEY ( id )
+);
+
+CREATE TABLE EXERCICIOS(
+  treino          INTEGER         NOT NULL,
+  exercicio       VARCHAR(40)     NOT NULL,
+
+  FOREIGN KEY ( treino ) REFERENCES TREINO( id ) ON DELETE CASCADE,
+  PRIMARY KEY ( treino, exercicio )
+);
+
+CREATE TABLE DIAS_TREINO(
+  treino          INTEGER         NOT NULL,
+  dia             DATE            NOT NULL,
+
+  FOREIGN KEY ( treino ) REFERENCES TREINO( id ) ON DELETE CASCADE,
+  PRIMARY KEY ( treino, dia )
+);
