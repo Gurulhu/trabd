@@ -15,11 +15,24 @@ class dbView( QWidget ):
         self.welcome = QLabel( "Esta é a Base de Dados", self )
         self.welcome.move( parent.width()/2, parent.height()/2 )
 
-class reportView( QWidget ):
+class r1View( QWidget ):
     def __init__( self, parent = None ):
         QWidget.__init__( self, parent )
-        self.welcome = QLabel( "Aqui ficarão os relatórios", self )
+        self.welcome = QLabel( "Aqui ficará o relatório 1", self )
         self.welcome.move( parent.width()/2, parent.height()/2 )
+
+class r2View( QWidget ):
+    def __init__( self, parent = None ):
+        QWidget.__init__( self, parent )
+        self.welcome = QLabel( "Aqui ficará o relatório 2", self )
+        self.welcome.move( parent.width()/2, parent.height()/2 )
+
+class r3View( QWidget ):
+    def __init__( self, parent = None ):
+        QWidget.__init__( self, parent )
+        self.welcome = QLabel( "Aqui ficará o relatório 3", self )
+        self.welcome.move( parent.width()/2, parent.height()/2 )
+
 
 
 class mainWindow( QMainWindow ):
@@ -36,12 +49,22 @@ class mainWindow( QMainWindow ):
         mainMenu = menuBar.addMenu("Menu")
         db_btn = QAction("Base de Dados", self)
         db_btn.triggered.connect(self.callDbView)
-        report_btn = QAction("Relatórios", self)
-        report_btn.triggered.connect(self.callReportView)
+
+        report_btn = QMenu("Relatórios", self)
+        rep1_btn = QAction( "Atletas por Modalidade, Treinador e Médico", self )
+        rep1_btn.triggered.connect(self.callR1View)
+        rep2_btn = QAction( "Médicos por Quantidade de Pacientes e Nação", self )
+        rep2_btn.triggered.connect(self.callR2View)
+        rep3_btn = QAction( "Atletas irregulares por Treinadores", self )
+        rep3_btn.triggered.connect(self.callR3View)
+        report_btn.addAction(rep1_btn)
+        report_btn.addAction(rep2_btn)
+        report_btn.addAction(rep3_btn)
+
         exit_btn = QAction("Sair", self)
         exit_btn.triggered.connect( self.exitCall )
         mainMenu.addAction(db_btn)
-        mainMenu.addAction(report_btn)
+        mainMenu.addMenu(report_btn)
         mainMenu.addAction(exit_btn)
 
         self.setMenuBar( menuBar )
@@ -61,8 +84,15 @@ class mainWindow( QMainWindow ):
     def callDbView( self, flag ):
         self.setCentralWidget( dbView( self ) )
 
-    def callReportView( self, flag ):
-        self.setCentralWidget( reportView( self ) )
+    def callR1View( self, flag ):
+        self.setCentralWidget( r1View( self ) )
+
+    def callR2View( self, flag ):
+        self.setCentralWidget( r2View( self ) )
+
+    def callR3View( self, flag ):
+        self.setCentralWidget( r3View( self ) )
+
 
 class loginScreen( QDialog ):
     def __init__( self, parent = None ):
