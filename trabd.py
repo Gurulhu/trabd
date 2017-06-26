@@ -18,28 +18,79 @@ class dbView( QWidget ):
 class r1View( QWidget ):
     def __init__( self, parent = None ):
         QWidget.__init__( self, parent )
-        self.welcome = QLabel( "Aqui ficará o relatório 1", self )
-        self.welcome.move( parent.width()/2, parent.height()/2 )
+        self.usr_label = QLabel( "Modalidade:", self )
+        self.usr_label.move( 20, 60 )
+        self.usr = QLineEdit( self )
+        self.usr.move( 180, 60 )
+        self.usr.resize( 150, 20 )
+
+        self.usr_label = QLabel( "Médico:", self )
+        self.usr_label.move( 20, 130 )
+        self.usr = QLineEdit( self )
+        self.usr.move( 180, 130 )
+        self.usr.resize( 150, 20 )
+
+        self.usr_label = QLabel( "Treinador:", self )
+        self.usr_label.move( 20, 200 )
+        self.usr = QLineEdit( self )
+        self.usr.move( 180, 200 )
+        self.usr.resize( 150, 20 )
+
+        self.gerar_btn = QPushButton("Gerar", self)
+        self.gerar_btn.clicked.connect( self.generate )
+        self.gerar_btn.move(100, 270)
+        self.gerar_btn.resize( 80, 20 )
+
+    def generate( self, flag ):
+        pass
 
 class r2View( QWidget ):
     def __init__( self, parent = None ):
         QWidget.__init__( self, parent )
-        self.welcome = QLabel( "Aqui ficará o relatório 2", self )
-        self.welcome.move( parent.width()/2, parent.height()/2 )
+        self.usr_label = QLabel( "Numero de Atletas:", self )
+        self.usr_label.move( 20, 60 )
+        self.usr = QLineEdit( self )
+        self.usr.move( 180, 60 )
+        self.usr.resize( 150, 20 )
+
+        self.usr_label = QLabel( "Nação:", self )
+        self.usr_label.move( 20, 130 )
+        self.usr = QLineEdit( self )
+        self.usr.move( 180, 130 )
+        self.usr.resize( 150, 20 )
+
+        self.gerar_btn = QPushButton("Gerar", self)
+        self.gerar_btn.clicked.connect( self.generate )
+        self.gerar_btn.move(100, 200)
+        self.gerar_btn.resize( 80, 20 )
+
+    def generate( self, flag ):
+        pass
+
 
 class r3View( QWidget ):
     def __init__( self, parent = None ):
         QWidget.__init__( self, parent )
-        self.welcome = QLabel( "Aqui ficará o relatório 3", self )
-        self.welcome.move( parent.width()/2, parent.height()/2 )
+        self.usr_label = QLabel( "Numero de Treinadores:", self )
+        self.usr_label.move( 20, 60 )
+        self.usr = QLineEdit( self )
+        self.usr.move( 180, 60 )
+        self.usr.resize( 150, 20 )
 
+        self.gerar_btn = QPushButton("Gerar", self)
+        self.gerar_btn.clicked.connect( self.generate )
+        self.gerar_btn.move(100, 130)
+        self.gerar_btn.resize( 80, 20 )
+
+    def generate( self, flag ):
+        pass
 
 
 class mainWindow( QMainWindow ):
     def __init__( self, parent = None, usr = None, pwd = None, conn = None ):
         QMainWindow.__init__(self, parent)
         self.setWindowTitle( "Trabd" )
-        self.resize( 800, 600 )
+        self.resize( 400, 500 )
         self.usr = usr
         self.pwd = pwd
         self.db = conn
