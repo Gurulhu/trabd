@@ -70,3 +70,92 @@ CREATE TABLE DIAS_TREINO(
   FOREIGN KEY ( treino ) REFERENCES TREINO( id ) ON DELETE CASCADE,
   PRIMARY KEY ( treino, dia )
 );
+
+CREATE TABLE PREPARACAO(
+  id              INTEGER         NOT NULL AUTO_INCREMENT,
+  dieta           TEXT            NOT NULL,
+  hrs_de_sono     INTEGER(2)      NOT NULL,
+
+  PRIMARY KEY ( id )
+);
+
+CREATE TABLE AQUECIMENTOS(
+  preparacao      INTEGER         NOT NULL,
+  aquecimento     VARCHAR(40)     NOT NULL,
+
+  FOREIGN KEY ( preparacao ) REFERENCES PREPARACAO( id ),
+  PRIMARY KEY ( preparacao, aquecimento )
+);
+
+CRETE TABLE PREP_TREINO(
+  treino          INTEGER         NOT NULL,
+  preparacao      INTEGER         NOT NULL,
+
+  FOREIGN KEY ( treino ) REFERENCES TREINO( id ),
+  FOREIGN KEY ( preparacao ) REFERENCES PREPARACAO( id ),
+
+  PRIMARY KEY ( treino, preparacao )
+);
+
+CREATE TABLE RECUPERACAO(
+  id              INTEGER         NOT NULL AUTO_INCREMENT,
+  tempo_repouso   INTEGER(2)      NOT NULL,
+
+  PRIMARY KEY ( id )
+);
+
+CREATE TABLE ALONGAMENTOS(
+  recuperacao     INTEGER         NOT NULL,
+  alongamento     VARCHAR(40)     NOT NULL,
+
+  FOREIGN KEY ( recuperacao ) REFERENCES RECUPERACAO ( id ),
+
+  PRIMARY KEY ( recuperacao, alongamento )
+);
+
+CREATE TABLE REC_TREINO(
+  treino          INTEGER         NOT NULL AUTO_INCREMENT,
+  preparacao      INTEGER         NOT NULL,
+
+  FOREIGN KEY ( treino ) REFERENCES TREINO( id ),
+  FOREIGN KEY ( preparacao ) REFERENCES PREPARACAO( id ),
+
+  PRIMARY KEY ( treino, preparacao )
+);
+
+CREATE TABLE ATLETA(
+  nro_passaporte  INTEGER(12)     NOT NULL,
+  peso            INTEGER(3)      NOT NULL,
+  altura          INTEGER(3)      NOT NULL,
+
+  FOREIGN KEY ( nro_passaporte ) REFERENCES PARTICIPANTE( nro_passaporte ),
+
+  PRIMARY KEY ( nro_passaporte )
+);
+
+CREATE TABLE SEGUE(
+  atleta          INTEGER(12)     NOT NULL,
+  preparador      INTEGER(12)     NOT NULL,
+  periodo         DATE            NOT NULL,
+
+  FOREIGN KEY ( preparador, periodo ) REFERENCES ROTINA( preparador, periodo ),
+  PRIMARY KEY ( atleta, preparador, periodo )
+);
+
+CREATE TABLE MODALIDADE(
+  cod_unico       INTEGER(4)      NOT NULL AUTO_INCREMENT,
+  nome            VARCHAR(30)     NOT NULL,
+  descricao       TEXT            NOT NULL,
+
+  PRIMARY KEY ( cod_unico )
+);
+
+CREATE TABLE COMPETE(
+  atleta          INTEGER(12)     NOT NULL,
+  modalidade      INTEGER(4)      NOT NULL,
+
+  FOREIGN KEY ( atleta )  REFERENCES ATLETA( nro_passaporte ),
+  FOREIGN KEY ( modalidade ) REFERENCES MODALIDADE( cod_unico ),
+
+  PRIMARY KEY ( atleta, modalidade )
+);
