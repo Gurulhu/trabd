@@ -18,17 +18,18 @@ class dbView( QWidget ):
 class reportView( QWidget ):
     def __init__( self, parent = None ):
         QWidget.__init__( self, parent )
-        self.welcome = QLabel( "Aqui ficaram os relatórios", self )
+        self.welcome = QLabel( "Aqui ficarão os relatórios", self )
         self.welcome.move( parent.width()/2, parent.height()/2 )
 
 
 class mainWindow( QMainWindow ):
-    def __init__( self, parent = None, usr = None, pwd = None ):
+    def __init__( self, parent = None, usr = None, pwd = None, conn = None ):
         QMainWindow.__init__(self, parent)
         self.setWindowTitle( "Trabd" )
         self.resize( 800, 600 )
         self.usr = usr
         self.pwd = pwd
+        self.db = conn
 
         menuBar = QMenuBar( self )
         menuBar.setNativeMenuBar( True )
@@ -38,7 +39,7 @@ class mainWindow( QMainWindow ):
         report_btn = QAction("Relatórios", self)
         report_btn.triggered.connect(self.callReportView)
         exit_btn = QAction("Sair", self)
-        exit_btn.triggered.connect( self.close )
+        exit_btn.triggered.connect( self.exitCall )
         mainMenu.addAction(db_btn)
         mainMenu.addAction(report_btn)
         mainMenu.addAction(exit_btn)
@@ -49,6 +50,13 @@ class mainWindow( QMainWindow ):
 
     def getUser():
         return self.usr
+
+    def exitCall( self, flag ):
+        try:
+            self.db.close()
+            self.close()
+        except:
+            print( "Ops" )
 
     def callDbView( self, flag ):
         self.setCentralWidget( dbView( self ) )
@@ -90,7 +98,7 @@ class loginScreen( QDialog ):
         conn = cx_Oracle.makedsn(ip, port, sid)
 
         try:
-            db = cx_Oracle.connect( str( self.usr.text() ), str( self.pwd.text() ), conn )
+            self.db = cx_Oracle.connect( str( self.usr.text() ), str( self.pwd.text() ), conn )
             self.accept()
         except Exception as e:
             print( e )
@@ -100,10 +108,10 @@ class loginScreen( QDialog ):
 if __name__ == "__main__":
     app = QApplication( sys.argv )
     login = loginScreen()
-    login_status = login.exec_()
-    login.close()
-    if login_status == QDialog.Accepted:
-        main = mainWindow( usr = login.usr.text(), pwd = login.pwd.text() )
+    if login.exec_() == QDialog.Accepted:
+        main = mainWindow( usr = login.usr.text(), pwd = login.pwd.text(), conn = login.db )
+        login.close()
         main.show()
+        sys.exit( app.exec_() )
 
-    app.exit(0)
+    sys.exit( 1 )
