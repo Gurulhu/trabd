@@ -1,70 +1,70 @@
 CREATE TABLE NACAO (
-  nome              VARCHAR(200)  NOT NULL,
-  continente        VARCHAR(5)    NOT NULL,
-  esporte_principal VARCHAR(50),
-  bandeira          VARCHAR(80)   NOT NULL,
-  hino              TEXT          NOT NULL,
+  nome              VARCHAR2(200)  NOT NULL,
+  continente        VARCHAR2(5)    NOT NULL,
+  esporte_principal VARCHAR2(50),
+  bandeira          VARCHAR2(80)   NOT NULL,
+  hino              BLOB          NOT NULL,
   nro_atletas       INT           NOT NULL,
   PRIMARY KEY ( nome )
 );
 
 CREATE TABLE PARTICIPANTE(
-  nro_passaporte    INTEGER(12)   NOT NULL,
-  nacao             VARCHAR(200)  NOT NULL,
+  nro_passaporte    NUMBER(12)   NOT NULL,
+  nacao             VARCHAR2(200)  NOT NULL,
   data_nasc         DATE          NOT NULL,
-  nome              VARCHAR(200)  NOT NULL,
-  sexo              BOOLEAN       NOT NULL,
+  nome              VARCHAR2(200)  NOT NULL,
+  sexo              NUMBER(1)       NOT NULL,
 
   FOREIGN KEY ( nacao ) REFERENCES  NACAO( nome ) ON DELETE CASCADE,
   PRIMARY KEY ( nro_passaporte )
 );
 
 CREATE TABLE PREPARADOR(
-  nro_passaporte  INTEGER(12)     NOT NULL,
-  estado          VARCHAR(2)      NOT NULL,
-  cpf             INTEGER(15),
-  email           VARCHAR(150)    NOT NULL,
-  senha           VARCHAR(100)    NOT NULL,
-  cidade          VARCHAR(150),
+  nro_passaporte  NUMBER(12)     NOT NULL,
+  estado          VARCHAR2(2)      NOT NULL,
+  cpf             NUMBER(15),
+  email           VARCHAR2(150)    NOT NULL,
+  senha           VARCHAR2(100)    NOT NULL,
+  cidade          VARCHAR2(150),
 
   FOREIGN KEY ( nro_passaporte ) REFERENCES PARTICIPANTE( nro_passaporte ) ON DELETE CASCADE,
   PRIMARY KEY ( nro_passaporte )
 );
 
 CREATE TABLE TELEFONE_PREPARADOR(
-  preparador      INTEGER(12)     NOT NULL,
-  telefone        INTEGER(15)     NOT NULL,
+  preparador      NUMBER(12)     NOT NULL,
+  telefone        NUMBER(15)     NOT NULL,
 
   FOREIGN KEY ( preparador ) REFERENCES PREPARADOR( nro_passaporte ) ON DELETE CASCADE,
   PRIMARY KEY ( preparador, telefone )
 );
 
 CREATE TABLE ROTINA(
-  preparador      INTEGER(12)     NOT NULL,
+  preparador      NUMBER(12)     NOT NULL,
   periodo         DATE            NOT NULL,
-  descricao       TEXT            NOT NULL,
+  descricao       BLOB            NOT NULL,
 
   FOREIGN KEY ( preparador ) REFERENCES PREPARADOR( nro_passaporte ) ON DELETE CASCADE,
   PRIMARY KEY ( preparador, periodo )
 );
 
 CREATE TABLE TREINO(
-  id              INTEGER         NOT NULL AUTO_INCREMENT,
-  objetivo        TEXT            NOT NULL,
+  id              NUMBER         NOT NULL  ,
+  objetivo        BLOB            NOT NULL,
 
   PRIMARY KEY ( id )
 );
 
 CREATE TABLE EXERCICIOS(
-  treino          INTEGER         NOT NULL,
-  exercicio       VARCHAR(40)     NOT NULL,
+  treino          NUMBER         NOT NULL,
+  exercicio       VARCHAR2(40)     NOT NULL,
 
   FOREIGN KEY ( treino ) REFERENCES TREINO( id ) ON DELETE CASCADE,
   PRIMARY KEY ( treino, exercicio )
 );
 
 CREATE TABLE DIAS_TREINO(
-  treino          INTEGER         NOT NULL,
+  treino          NUMBER         NOT NULL,
   dia             DATE            NOT NULL,
 
   FOREIGN KEY ( treino ) REFERENCES TREINO( id ) ON DELETE CASCADE,
@@ -72,24 +72,24 @@ CREATE TABLE DIAS_TREINO(
 );
 
 CREATE TABLE PREPARACAO(
-  id              INTEGER         NOT NULL AUTO_INCREMENT,
-  dieta           TEXT            NOT NULL,
-  hrs_de_sono     INTEGER(2)      NOT NULL,
+  id              NUMBER         NOT NULL  ,
+  dieta           BLOB            NOT NULL,
+  hrs_de_sono     NUMBER(2)      NOT NULL,
 
   PRIMARY KEY ( id )
 );
 
 CREATE TABLE AQUECIMENTOS(
-  preparacao      INTEGER         NOT NULL,
-  aquecimento     VARCHAR(40)     NOT NULL,
+  preparacao      NUMBER         NOT NULL,
+  aquecimento     VARCHAR2(40)     NOT NULL,
 
   FOREIGN KEY ( preparacao ) REFERENCES PREPARACAO( id ),
   PRIMARY KEY ( preparacao, aquecimento )
 );
 
 CRETE TABLE PREP_TREINO(
-  treino          INTEGER         NOT NULL,
-  preparacao      INTEGER         NOT NULL,
+  treino          NUMBER         NOT NULL,
+  preparacao      NUMBER         NOT NULL,
 
   FOREIGN KEY ( treino ) REFERENCES TREINO( id ),
   FOREIGN KEY ( preparacao ) REFERENCES PREPARACAO( id ),
@@ -98,15 +98,15 @@ CRETE TABLE PREP_TREINO(
 );
 
 CREATE TABLE RECUPERACAO(
-  id              INTEGER         NOT NULL AUTO_INCREMENT,
-  tempo_repouso   INTEGER(2)      NOT NULL,
+  id              NUMBER         NOT NULL  ,
+  tempo_repouso   NUMBER(2)      NOT NULL,
 
   PRIMARY KEY ( id )
 );
 
 CREATE TABLE ALONGAMENTOS(
-  recuperacao     INTEGER         NOT NULL,
-  alongamento     VARCHAR(40)     NOT NULL,
+  recuperacao     NUMBER         NOT NULL,
+  alongamento     VARCHAR2(40)     NOT NULL,
 
   FOREIGN KEY ( recuperacao ) REFERENCES RECUPERACAO ( id ),
 
@@ -114,8 +114,8 @@ CREATE TABLE ALONGAMENTOS(
 );
 
 CREATE TABLE REC_TREINO(
-  treino          INTEGER         NOT NULL AUTO_INCREMENT,
-  preparacao      INTEGER         NOT NULL,
+  treino          NUMBER         NOT NULL  ,
+  preparacao      NUMBER         NOT NULL,
 
   FOREIGN KEY ( treino ) REFERENCES TREINO( id ),
   FOREIGN KEY ( preparacao ) REFERENCES PREPARACAO( id ),
@@ -124,9 +124,9 @@ CREATE TABLE REC_TREINO(
 );
 
 CREATE TABLE ATLETA(
-  nro_passaporte  INTEGER(12)     NOT NULL,
-  peso            INTEGER(3)      NOT NULL,
-  altura          INTEGER(3)      NOT NULL,
+  nro_passaporte  NUMBER(12)     NOT NULL,
+  peso            NUMBER(3)      NOT NULL,
+  altura          NUMBER(3)      NOT NULL,
 
   FOREIGN KEY ( nro_passaporte ) REFERENCES PARTICIPANTE( nro_passaporte ),
 
@@ -134,8 +134,8 @@ CREATE TABLE ATLETA(
 );
 
 CREATE TABLE SEGUE(
-  atleta          INTEGER(12)     NOT NULL,
-  preparador      INTEGER(12)     NOT NULL,
+  atleta          NUMBER(12)     NOT NULL,
+  preparador      NUMBER(12)     NOT NULL,
   periodo         DATE            NOT NULL,
 
   FOREIGN KEY ( preparador, periodo ) REFERENCES ROTINA( preparador, periodo ),
@@ -143,16 +143,16 @@ CREATE TABLE SEGUE(
 );
 
 CREATE TABLE MODALIDADE(
-  cod_unico       INTEGER(4)      NOT NULL AUTO_INCREMENT,
-  nome            VARCHAR(30)     NOT NULL,
-  descricao       TEXT            NOT NULL,
+  cod_unico       NUMBER(4)      NOT NULL  ,
+  nome            VARCHAR2(30)     NOT NULL,
+  descricao       BLOB            NOT NULL,
 
   PRIMARY KEY ( cod_unico )
 );
 
 CREATE TABLE COMPETE(
-  atleta          INTEGER(12)     NOT NULL,
-  modalidade      INTEGER(4)      NOT NULL,
+  atleta          NUMBER(12)     NOT NULL,
+  modalidade      NUMBER(4)      NOT NULL,
 
   FOREIGN KEY ( atleta )  REFERENCES ATLETA( nro_passaporte ),
   FOREIGN KEY ( modalidade ) REFERENCES MODALIDADE( cod_unico ),
@@ -161,43 +161,94 @@ CREATE TABLE COMPETE(
 );
 
 CREATE TABLE LESAO(
-  id              INTEGER(4)      NOT NULL AUTO_INCREMENT,
-  descricao       TEXT            NOT NULL,
-
+  id              NUMBER(4)      NOT NULL  ,  
+  descricao       VARCHAR2(400)  NOT NULL,
   PRIMARY KEY ( id )
 );
 
 CREATE TABLE MEDICO(
-  nome            VARCHAR(150)    NOT NULL,
-  crm             INTEGER(12)     NOT NULL,
-  doc_identidade  INTEGER(12)     NOT NULL UNIQUE,
-  endereco        VARCHAR(200)    NOT NULL,
+  nome            VARCHAR2(150)    NOT NULL,
+  crm             VARCHAR2(12)     NOT NULL,
+  doc_identidade  NUMBER(12)     NOT NULL UNIQUE,
+  endereco        VARCHAR2(200)    NOT NULL,
 
   PRIMARY KEY ( doc_identidade )
 );
 
 CREATE TABLE TELEFONE_MEDICO(
-  medico          INTEGER(12)     NOT NULL,
-  telefone        INTEGER(15)     NOT NULL,
+  medico          VARCHAR2(12)     NOT NULL,
+  telefone        NUMBER(15)     NOT NULL,
 
-  FOREIGN KEY ( medico ) REFERENCES MEDICO( crm );
+  FOREIGN KEY ( medico ) REFERENCES MEDICO( crm ),
   PRIMARY KEY ( medico, telefone )
 );
 
 CREATE TABLE DIAGNOSTICO(
-  id              INTEGER(4)      NOT NULL AUTO_INCREMENT,
-  descricao       TEXT            NOT NULL,
+  id              NUMBER(4)      NOT NULL  ,
+  descricao       BLOB            NOT NULL,
 
   PRIMARY KEY ( id )
 );
 
 CREATE TABLE METODO_DE_TRATAMENTO(
-  id              INTEGER(4)      NOT NULL AUTO_INCREMENT,
-  diagnostico     INTEGER(4)      NOT NULL,
-  descricao       TEXT            NOT NULL,
+  id              NUMBER(4)      NOT NULL  ,
+  diagnostico     NUMBER(4)      NOT NULL,
+  descricao       BLOB            NOT NULL,
   efetividade     REAL,
 
   FOREIGN KEY ( diagnostico ) REFERENCES DIAGNOSTICO( id ),
 
   PRIMARY KEY ( id )
+);
+
+
+
+CREATE TABLE ACOMPANHA(
+    medico      VARCHAR2(12)     NOT NULL,
+    atleta      NUMBER(12)     NOT NULL,
+    lesao       NUMBER(4)      NOT NULL,
+    
+    
+    PRIMARY KEY (medico, atleta, lesao),
+    FOREIGN KEY ( medico ) REFERENCES MEDICO ( crm ) ON DELETE CASCADE, 
+    FOREIGN KEY ( atleta ) REFERENCES ATLETA ( nro_passaporte ) ON DELETE CASCADE,
+    FOREIGN KEY ( lesao ) REFERENCES LESAO ( id ) ON DELETE CASCADE 
+);
+
+
+CREATE TABLE DOPING(
+    medico      VARCHAR2(12)     NOT NULL,
+    atleta      NUMBER(12)     NOT NULL,
+    modalidade  NUMBER(4)      NOT NULL,
+    data        DATE            NOT NULL,
+    resultado   NUMBER(1)         NOT NULL,   
+    
+    PRIMARY KEY ( medico, atleta, modalidade ),
+    FOREIGN KEY ( modalidade ) REFERENCES MODALIDADE ( cod_unico ) ON DELETE CASCADE, 
+    FOREIGN KEY ( medico ) REFERENCES MEDICO ( crm ) ON DELETE CASCADE, 
+    FOREIGN KEY ( atleta ) REFERENCES ATLETA ( nro_passaporte ) ON DELETE CASCADE 
+);
+
+CREATE TABLE CONSULTA(
+    medico      VARCHAR2(12)     NOT NULL,
+    paciente    NUMBER(12)     NOT NULL,
+    data        DATE            NOT NULL,
+    diagnostico NUMBER(4)      NOT NULL,
+
+
+    PRIMARY KEY ( medico, paciente, data ),
+    FOREIGN KEY ( medico ) REFERENCES MEDICO ( crm ) ON DELETE CASCADE, 
+    FOREIGN KEY ( atleta ) REFERENCES ATLETA ( nro_passaporte ) ON DELETE CASCADE 
+    FOREIGN KEY ( diagnostico ) REFERENCES DIAGNOSTICO( id ) ON DELETE CASCADE.
+);
+
+CREATE TABLE SINTOMAS(
+    medico      VARCHAR2(12)     NOT NULL,
+    atleta      NUMBER(12)     NOT NULL,
+    data        DATE            NOT NULL,
+    sintoma    BLOB            NOT NULL,
+
+    PRIMARY KEY ( medico, atleta, sintoma ),
+    FOREIGN KEY ( medico, atleta, data ) REFERENCES CONSULTA ( medico, paciente,
+    data ) ON DELETE CASCADE,
 );
