@@ -9,11 +9,27 @@ class greetingView( QWidget ):
         self.welcome = QLabel( "Olá " + parent.usr + "!", self )
         self.welcome.move( parent.width()/2, parent.height()/2 )
 
-class dbView( QWidget ):
+class dbView( QTableWidget ):
     def __init__( self, parent = None ):
-        QWidget.__init__( self, parent )
-        self.welcome = QLabel( "Esta é a Base de Dados", self )
-        self.welcome.move( parent.width()/2, parent.height()/2 )
+        QTableWidget.__init__( self, parent )
+        self.resize( parent.width(), parent.height() )
+        cursor = parent.db.cursor()
+        cursor.execute( "SELECT * FROM METODO_DE_TRATAMENTO" )
+        result = cursor.fetchall()
+        self.setRowCount( len(result) )
+        self.setColumnCount( len( result[0] ) )
+        for i in range( len( result ) ):
+            print( result[i] )
+            for j in range( len( result[i] ) ):
+                try:
+                    self.setItem( i, j, QTableWidgetItem( str( result[i][j] ) ) )
+                except Exception as e:
+                    print( e )
+                    self.setItem( i, j, QTableWidgetItem( str( result[i][j].read() ) ) )
+
+        self.gerar_btn = QPushButton("Gerar", self)
+        self.gerar_btn.move(100, 270)
+        self.gerar_btn.resize( 80, 20 )
 
 class r1View( QWidget ):
     def __init__( self, parent = None ):
