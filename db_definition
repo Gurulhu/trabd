@@ -159,3 +159,45 @@ CREATE TABLE COMPETE(
 
   PRIMARY KEY ( atleta, modalidade )
 );
+
+CREATE TABLE LESAO(
+  id              INTEGER(4)      NOT NULL AUTO_INCREMENT,
+  descricao       TEXT            NOT NULL,
+
+  PRIMARY KEY ( id )
+);
+
+CREATE TABLE MEDICO(
+  nome            VARCHAR(150)    NOT NULL,
+  crm             INTEGER(12)     NOT NULL,
+  doc_identidade  INTEGER(12)     NOT NULL UNIQUE,
+  endereco        VARCHAR(200)    NOT NULL,
+
+  PRIMARY KEY ( doc_identidade )
+);
+
+CREATE TABLE TELEFONE_MEDICO(
+  medico          INTEGER(12)     NOT NULL,
+  telefone        INTEGER(15)     NOT NULL,
+
+  FOREIGN KEY ( medico ) REFERENCES MEDICO( crm );
+  PRIMARY KEY ( medico, telefone )
+);
+
+CREATE TABLE DIAGNOSTICO(
+  id              INTEGER(4)      NOT NULL AUTO_INCREMENT,
+  descricao       TEXT            NOT NULL,
+
+  PRIMARY KEY ( id )
+);
+
+CREATE TABLE METODO_DE_TRATAMENTO(
+  id              INTEGER(4)      NOT NULL AUTO_INCREMENT,
+  diagnostico     INTEGER(4)      NOT NULL,
+  descricao       TEXT            NOT NULL,
+  efetividade     REAL,
+
+  FOREIGN KEY ( diagnostico ) REFERENCES DIAGNOSTICO( id ),
+
+  PRIMARY KEY ( id )
+);
