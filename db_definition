@@ -162,7 +162,7 @@ CREATE TABLE COMPETE(
 
 CREATE TABLE LESAO(
   id              NUMBER(4)      NOT NULL  ,  
-  descricao       TEXT()            NOT NULL,
+  descricao       VARCHAR2(400)  NOT NULL,
   PRIMARY KEY ( id )
 );
 
