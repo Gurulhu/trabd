@@ -3,7 +3,7 @@ CREATE TABLE NACAO (
   continente        VARCHAR2(5)    NOT NULL,
   esporte_principal VARCHAR2(50),
   bandeira          VARCHAR2(80)   NOT NULL,
-  hino              BLOB          NOT NULL,
+  hino              VARCHAR2(400)          NOT NULL,
   nro_atletas       INT           NOT NULL,
   PRIMARY KEY ( nome )
 );
@@ -42,7 +42,7 @@ CREATE TABLE TELEFONE_PREPARADOR(
 CREATE TABLE ROTINA(
   preparador      NUMBER(12)     NOT NULL,
   periodo         DATE            NOT NULL,
-  descricao       BLOB            NOT NULL,
+  descricao       VARCHAR2(400)            NOT NULL,
 
   FOREIGN KEY ( preparador ) REFERENCES PREPARADOR( nro_passaporte ) ON DELETE CASCADE,
   PRIMARY KEY ( preparador, periodo )
@@ -50,7 +50,7 @@ CREATE TABLE ROTINA(
 
 CREATE TABLE TREINO(
   id              NUMBER         NOT NULL  ,
-  objetivo        BLOB            NOT NULL,
+  objetivo        VARCHAR2(400)            NOT NULL,
 
   PRIMARY KEY ( id )
 );
@@ -73,7 +73,7 @@ CREATE TABLE DIAS_TREINO(
 
 CREATE TABLE PREPARACAO(
   id              NUMBER         NOT NULL  ,
-  dieta           BLOB            NOT NULL,
+  dieta           VARCHAR2(400)            NOT NULL,
   hrs_de_sono     NUMBER(2)      NOT NULL,
 
   PRIMARY KEY ( id )
@@ -145,7 +145,7 @@ CREATE TABLE SEGUE(
 CREATE TABLE MODALIDADE(
   cod_unico       NUMBER(4)      NOT NULL  ,
   nome            VARCHAR2(30)     NOT NULL,
-  descricao       BLOB            NOT NULL,
+  descricao       VARCHAR2(400)            NOT NULL,
 
   PRIMARY KEY ( cod_unico )
 );
@@ -185,7 +185,7 @@ CREATE TABLE TELEFONE_MEDICO(
 
 CREATE TABLE DIAGNOSTICO(
   id              NUMBER(4)      NOT NULL  ,
-  descricao       BLOB            NOT NULL,
+  descricao       VARCHAR2(400)            NOT NULL,
 
   PRIMARY KEY ( id )
 );
@@ -193,7 +193,7 @@ CREATE TABLE DIAGNOSTICO(
 CREATE TABLE METODO_DE_TRATAMENTO(
   id              NUMBER(4)      NOT NULL  ,
   diagnostico     NUMBER(4)      NOT NULL,
-  descricao       BLOB            NOT NULL,
+  descricao       VARCHAR2(400)            NOT NULL,
   efetividade     REAL,
 
   FOREIGN KEY ( diagnostico ) REFERENCES DIAGNOSTICO( id ),
@@ -243,10 +243,10 @@ CREATE TABLE CONSULTA(
 );
 
 CREATE TABLE SINTOMAS(
-    medico      VARCHAR2(12)     NOT NULL,
-    atleta      NUMBER(12)     NOT NULL,
+    medico      VARCHAR2(12)    NOT NULL,
+    atleta      NUMBER(12)      NOT NULL,
     data        DATE            NOT NULL,
-    sintoma    BLOB            NOT NULL,
+    sintoma    VARCHAR2(400)    NOT NULL,
 
     PRIMARY KEY ( medico, atleta, sintoma ),
     FOREIGN KEY ( medico, atleta, data ) REFERENCES CONSULTA ( medico, paciente,
