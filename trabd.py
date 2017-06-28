@@ -3,6 +3,20 @@ import cx_Oracle
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+class dialog( QDialog ):
+    def __init__( self, parent = None, opts = None ):
+        QDialog.__init__( self, parent )
+        self.combo = QComboBox()
+        self.combo.resize( 100, 40 )
+        self.combo.move( 20, 20 )
+        print( opts )
+        for i in range( len( opts ) ):
+            self.combo.addItem( str( opts[i][0] ) )
+        self.combo.activated.connect( self.changed )
+
+    def changed( int ):
+        self.accept()
+
 class greetingView( QWidget ):
     def __init__( self, parent = None ):
         QWidget.__init__( self, parent )
@@ -13,23 +27,57 @@ class dbView( QTableWidget ):
     def __init__( self, parent = None ):
         QTableWidget.__init__( self, parent )
         self.resize( parent.width(), parent.height() )
-        cursor = parent.db.cursor()
+        self.db = parent.db
+        cursor = self.db.cursor()
         cursor.execute( "SELECT * FROM METODO_DE_TRATAMENTO" )
         result = cursor.fetchall()
-        self.setRowCount( len(result) )
-        self.setColumnCount( len( result[0] ) )
+        self.setRowCount( len(result) + 1 )
+        self.setColumnCount( len( result[0] ) + 1 )
         for i in range( len( result ) ):
-            print( result[i] )
             for j in range( len( result[i] ) ):
                 try:
                     self.setItem( i, j, QTableWidgetItem( str( result[i][j] ) ) )
                 except Exception as e:
-                    print( e )
                     self.setItem( i, j, QTableWidgetItem( str( result[i][j].read() ) ) )
+            self.setItem( i, len( result[i] ), QTableWidgetItem( "Deletar" ) )
+        self.cellClicked.connect( self.callCellClicked )
+        self.cellChanged.connect( self.callCellChanged )
+        self.setItem( len( result ), len( result[i] ), QTableWidgetItem( "Inserir" ) )
+        cursor.close()
 
-        self.gerar_btn = QPushButton("Gerar", self)
-        self.gerar_btn.move(100, 270)
-        self.gerar_btn.resize( 80, 20 )
+    def callCellChanged( self, i, j ):
+        if i != self.rowCount() -1:
+            self.item( i, 4 ).setData( 2, "Alterar" )
+
+    def callCellClicked( self, i, j ):
+        print( i, j, self.rowCount(), self.columnCount() )
+        if j == self.columnCount() - 1:
+            cursor = self.db.cursor()
+            if i == self.rowCount() - 1:
+                statement = "INSERT INTO METODO_DE_TRATAMENTO VALUES ( :q, :w, :e, :r )"
+                values = { "q": self.item( i, 0 ).data(2), "w": self.item( i, 1 ).data(2), "e": self.item( i, 2 ).data(2).encode("UTF-8"), "r": self.item( i, 3 ).data(2) }
+            elif self.item( i, j ).data(2) == "Deletar":
+                statement = "DELETE FROM METODO_DE_TRATAMENTO WHERE id = :q"
+                values = { "q": self.item( i, 0 ).data(2) }
+            else:
+                statement = "UPDATE METODO_DE_TRATAMENTO SET id = :q, diagnostico = :w, descricao = :e, efetividade = :r WHERE id = :q"
+                values = { "q": self.item( i, 0 ).data(2), "w": self.item( i, 1 ).data(2), "e": self.item( i, 2 ).data(2).encode("UTF-8"), "r": self.item( i, 3 ).data(2) }
+            print( statement, values )
+            cursor.execute( statement, values )
+            self.db.commit()
+            cursor.close()
+        elif j == 1:
+            cursor = self.db.cursor()
+            cursor.execute( "SELECT ID FROM DIAGNOSTICO" )
+            opts = cursor.fetchall()
+            cursor.close()
+            d = dialog( opts = opts )
+            d.exec_()
+            self.item( i, j).setData( 2, str( d.combo.currentIndex() ) )
+            d.close()
+
+
+
 
 class r1View( QWidget ):
     def __init__( self, parent = None ):
@@ -106,7 +154,7 @@ class mainWindow( QMainWindow ):
     def __init__( self, parent = None, usr = None, pwd = None, conn = None ):
         QMainWindow.__init__(self, parent)
         self.setWindowTitle( "Trabd" )
-        self.resize( 400, 500 )
+        self.resize( 600, 600 )
         self.usr = usr
         self.pwd = pwd
         self.db = conn
