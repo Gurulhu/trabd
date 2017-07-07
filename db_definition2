@@ -1,0 +1,20 @@
+CREATE TABLE MESA (
+  numero           INTEGER        NOT NULL,
+  lugares          INTEGER,
+
+  PRIMARY KEY ( numero )
+);
+
+CREATE TABLE COMANDA (
+  numero            SERIAL        NOT NULL,
+  entrada           TIME          NOT NULL,
+  dia               DATE          NOT NULL,
+  saida             TIME,
+  mesa              INTEGER,
+  pessoas           INTEGER,
+  reserva           BOOLEAN,
+
+  FOREIGN KEY ( mesa ) REFERENCES MESA( numero ),
+
+  PRIMARY KEY ( numero )
+);
