@@ -218,10 +218,12 @@ if __name__ == "__main__":
     login = loginView.telaLogin()
     if login.exec_() == QDialog.Accepted:
         #main = mainWindow( usr = login.usr.text(), pwd = login.pwd.text(), conn = login.db )
-        comanda = comandaView.telaPreComanda( db = login.db )
-        comanda.exec_()
+        precomanda = comandaView.telaPreComanda( db = login.db )
         login.close()
+        if precomanda.exec_() == QDialog.Accepted:
+            comanda = comandaView.telaComanda( db = precomanda.db )
+            comanda.show()
         #main.show()
-        #sys.exit( app.exec_() )
+        sys.exit( app.exec_() )
 
     sys.exit( 1 )

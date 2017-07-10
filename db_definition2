@@ -13,6 +13,7 @@ CREATE TABLE COMANDA (
   mesa              INTEGER,
   pessoas           INTEGER,
   reserva           BOOLEAN,
+  pago              BOOLEAN,
 
   FOREIGN KEY ( mesa ) REFERENCES MESA( numero ),
 

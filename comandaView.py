@@ -5,9 +5,9 @@ from PyQt4.QtSql import *
 import time
 import datetime
 
-class telaComanda( QWidget ):
+class telaComanda( QMainWindow ):
     def __init__( self, parent = None, db = None ):
-        QWidget.__init__( self, parent )
+        QMainWindow.__init__( self, parent )
         self.db = db
         self.setWindowTitle( "Comanda" )
         self.resize( 600, 400 )
